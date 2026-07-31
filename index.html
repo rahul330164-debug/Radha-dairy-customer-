@@ -96,7 +96,7 @@
             <div class="px-5 pt-12 flex justify-between items-center">
                 <div>
                     <p class="text-sm text-gray-500 font-medium">Good Morning</p>
-                    <h1 class="text-3xl font-bold text-gray-900 font-poppins" id="custDashName">Name </h1>
+                    <h1 class="text-3xl font-bold text-gray-900 font-poppins" id="custDashName">Name  </h1>
                 </div>
                 <button class="w-12 h-12 rounded-full bg-white shadow flex items-center justify-center active:scale-95 transition-all" onclick="openProfileModal()">
                     <i class="fa-solid fa-user text-indigo-600 text-lg"></i>
@@ -107,6 +107,966 @@
                 <div class="absolute -right-6 -bottom-6 opacity-10 text-[10rem] pointer-events-none"><i class="fa-solid fa-wallet"></i></div>
                 <div class="relative z-10">
                     <p class="opacity-90 text-sm font-medium tracking-wide" id="custDashBillLabel">Outstanding Balance</p>
+                    <h2 class="text-5xl font-black mt-1 tracking-tight" id="custDashBill">&#8377;0</h2>
+
+                    <div class="flex justify-between mt-8 items-end">
+                        <div>
+                            <p class="text-xs opacity-90 font-medium tracking-wider uppercase mb-1">Today's Milk</p>
+                            <h3 class="text-xl font-bold" id="custDashDailyMilk">0 L</h3>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs opacity-90 font-medium tracking-wider uppercase mb-1">Status</p>
+                            <span class="font-bold bg-white/20 px-3 py-1 rounded-lg text-sm border border-white/20 backdrop-blur-sm shadow-sm" id="custStatus">Active</span>
+                        </div>
+                    </div>
+
+                    <button onclick="showCustomerQR()" class="mt-6 bg-white hover:bg-slate-50 text-indigo-700 font-bold w-full py-3.5 rounded-2xl shadow-lg active:scale-95 transition-all flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-qrcode"></i> Pay Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-4 gap-3 px-5 mt-6">
+                <div class="surface p-3 text-center cursor-pointer active:scale-95 transition-transform" onclick="openNewOrderModal()">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-100 mx-auto flex items-center justify-center shadow-inner">
+                        <i class="fa-solid fa-cart-plus text-indigo-700 text-lg"></i>
+                    </div>
+                    <p class="text-[11px] mt-2 font-bold text-gray-700">Order</p>
+                </div>
+                <div class="surface p-3 text-center cursor-pointer active:scale-95 transition-transform" onclick="showCustomerQR()">
+                    <div class="w-12 h-12 rounded-2xl bg-green-100 mx-auto flex items-center justify-center shadow-inner">
+                        <i class="fa-solid fa-indian-rupee-sign text-green-700 text-lg"></i>
+                    </div>
+                    <p class="text-[11px] mt-2 font-bold text-gray-700">Pay</p>
+                </div>
+                <div class="surface p-3 text-center cursor-pointer active:scale-95 transition-transform" onclick="openCurrentMonthStatement()">
+                    <div class="w-12 h-12 rounded-2xl bg-red-100 mx-auto flex items-center justify-center shadow-inner">
+                        <i class="fa-solid fa-file-pdf text-red-600 text-lg"></i>
+                    </div>
+                    <p class="text-[11px] mt-2 font-bold text-gray-700">Statement</p>
+                </div>
+                <div class="surface p-3 text-center cursor-pointer active:scale-95 transition-transform" onclick="openUnifiedHistoryModal('regular')">
+                    <div class="w-12 h-12 rounded-2xl bg-yellow-100 mx-auto flex items-center justify-center shadow-inner">
+                        <i class="fa-solid fa-clock-rotate-left text-yellow-600 text-lg"></i>
+                    </div>
+                    <p class="text-[11px] mt-2 font-bold text-gray-700">History</p>
+                </div>
+            </div>
+
+            <div class="px-5 mt-6 space-y-4">
+                <div class="surface p-5 flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Total Billed Amount</p>
+                        <h2 class="text-3xl font-black mt-1 text-gray-800" id="custTotalBill">&#8377;0</h2>
+                    </div>
+                    <div class="w-14 h-14 rounded-[1.2rem] bg-indigo-50 flex items-center justify-center shadow-inner border border-indigo-100 cursor-pointer active:scale-95 transition-transform" onclick="openUnifiedHistoryModal('regular')">
+                        <i class="fa-solid fa-file-invoice text-2xl text-indigo-500"></i>
+                    </div>
+                </div>
+
+                <div class="surface p-5">
+                    <h3 class="font-bold text-gray-800 mb-2 font-poppins flex items-center gap-2">
+                        <i class="fa-solid fa-bolt text-amber-500"></i> Recent Activity
+                    </h3>
+                    <div id="custRecentActivityList" class="flex flex-col"></div>
+                </div>
+            </div>
+
+            <button onclick="openNewOrderModal()" class="fixed bottom-24 right-6 lg:right-auto lg:ml-[22rem] w-16 h-16 rounded-3xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl flex items-center justify-center active:scale-95 transition-all z-40">
+                <i class="fa-solid fa-plus text-2xl"></i>
+            </button>
+
+            <!-- Bottom Navigation -->
+            <div class="fixed bottom-0 left-1/2 -translate-x-1/2 max-w-md w-full bg-white border-t border-gray-100 rounded-t-[32px] shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-50 px-2">
+                <div class="grid grid-cols-4 py-3 text-center">
+                    <div class="text-indigo-700 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                        <div class="w-14 h-8 mx-auto rounded-full bg-indigo-100 flex items-center justify-center transition-colors">
+                            <i class="fa-solid fa-house"></i>
+                        </div>
+                        <p class="text-[11px] mt-1 font-bold">Home</p>
+                    </div>
+                    <div class="text-gray-400 hover:text-indigo-500 cursor-pointer transition-colors" onclick="openNewOrderModal()">
+                        <div class="h-8 flex items-center justify-center"><i class="fa-solid fa-box text-lg"></i></div>
+                        <p class="text-[11px] mt-1 font-semibold">Orders</p>
+                    </div>
+                    <div class="text-gray-400 hover:text-indigo-500 cursor-pointer transition-colors" onclick="showCustomerQR()">
+                        <div class="h-8 flex items-center justify-center"><i class="fa-solid fa-credit-card text-lg"></i></div>
+                        <p class="text-[11px] mt-1 font-semibold">Pay</p>
+                    </div>
+                    <div class="text-gray-400 hover:text-rose-500 cursor-pointer transition-colors" onclick="logoutConfirm()">
+                        <div class="h-8 flex items-center justify-center"><i class="fa-solid fa-right-from-bracket text-lg"></i></div>
+                        <p class="text-[11px] mt-1 font-semibold">Logout</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- FULL SCREEN MONTHLY DETAIL VIEW -->
+    <div id="monthDetailScreen" class="screen-container min-h-screen bg-[#F6F6FB]">
+        <div class="max-w-md mx-auto relative min-h-screen flex flex-col">
+            <!-- Header -->
+            <div class="px-5 pt-12 pb-4 flex justify-between items-center bg-white sticky top-0 z-50 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <button onclick="closeMonthDetailScreen()" class="w-10 h-10 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center transition-all active:scale-95 border border-slate-100">
+                        <i class="fa-solid fa-arrow-left text-slate-600"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-xl font-bold font-poppins text-slate-800" id="mdsMonthTitle">Month</h2>
+                        <p class="text-[11px] font-bold text-slate-400 tracking-wider uppercase">Monthly Statement</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="px-4 mt-5">
+                <div class="bg-indigo-600 rounded-[24px] p-5 text-white shadow-lg relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 opacity-10 text-[8rem] pointer-events-none"><i class="fa-solid fa-file-invoice"></i></div>
+                    <div class="relative z-10 grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs text-indigo-200 font-medium">Total Milk</p>
+                            <h3 class="text-xl font-bold mt-1" id="mdsTotalMilk">0 L</h3>
+                        </div>
+                        <div>
+                            <p class="text-xs text-indigo-200 font-medium">Total Bill</p>
+                            <h3 class="text-xl font-bold mt-1" id="mdsTotalBill">&#8377;0</h3>
+                        </div>
+                        <div>
+                            <p class="text-xs text-indigo-200 font-medium">Amount Paid</p>
+                            <h3 class="text-xl font-bold mt-1 text-emerald-300" id="mdsTotalPaid">&#8377;0</h3>
+                        </div>
+                        <div>
+                            <p class="text-xs text-indigo-200 font-medium">Month Dues</p>
+                            <h3 class="text-xl font-bold mt-1 text-rose-300" id="mdsTotalDue">&#8377;0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statement List -->
+            <div class="px-4 mt-5 flex-1 pb-28">
+                <h3 class="font-bold text-slate-800 mb-3 ml-1 text-sm"><i class="fa-regular fa-calendar-days text-indigo-500 mr-2"></i> Daily Records</h3>
+                <div id="mdsRecordsList" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    <!-- Dynamic Records -->
+                </div>
+            </div>
+
+            <!-- Fixed Bottom Action -->
+            <div class="fixed bottom-0 left-1/2 -translate-x-1/2 max-w-md w-full bg-white border-t border-slate-100 p-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-40">
+                <button id="mdsDownloadBtn" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold py-4 rounded-2xl border border-rose-100 shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-pdf text-lg"></i> Download PDF Statement
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- UNIFIED HISTORY MODAL -->
+    <div id="unifiedHistoryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-[100] flex items-center justify-center opacity-0 transition-all duration-300 px-4 py-8">
+        <div class="surface w-full max-w-md p-0 scale-95 transition-all duration-300 relative h-full max-h-[85vh] flex flex-col overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-white z-10">
+                <h3 class="text-lg font-bold text-slate-800 font-poppins"><i class="fa-solid fa-clock-rotate-left text-indigo-500 mr-2"></i> Statement Download</h3>
+                <button onclick="closeUnifiedHistoryModal()" class="text-slate-400 hover:bg-slate-100 h-8 w-8 rounded-full flex items-center justify-center transition-all"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="flex border-b border-slate-100 bg-slate-50 shrink-0">
+                <button id="tabRegularOrders" onclick="switchHistoryTab('regular')" class="flex-1 py-3.5 text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 transition-all">Monthly Statements</button>
+                <button id="tabNewOrders" onclick="switchHistoryTab('new')" class="flex-1 py-3.5 text-sm font-bold text-slate-400 border-b-2 border-transparent transition-all">Extra Items</button>
+            </div>
+
+            <div id="contentRegularOrders" class="flex flex-col h-full overflow-hidden bg-[#F6F6FB]">
+                <div class="overflow-y-auto flex-1 p-4" id="regularOrdersList">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <div id="contentNewOrders" class="hidden overflow-y-auto flex-1 p-4 space-y-3 bg-[#F6F6FB]">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PROFILE MODAL -->
+    <div id="profileModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-[100] flex items-center justify-center opacity-0 transition-all duration-300 px-4">
+        <div class="surface w-full max-w-sm p-6 scale-95 transition-all duration-300 relative">
+            <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-slate-400 hover:bg-slate-100 h-8 w-8 rounded-full flex items-center justify-center transition-all"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-lg font-bold text-slate-800 mb-5 font-poppins"><i class="fa-solid fa-user-circle text-indigo-500 mr-2"></i> My Profile</h3>
+            <div class="space-y-4">
+                <div class="flex flex-col items-center mb-4">
+                    <div class="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-black text-2xl mb-2 shadow-inner" id="profileInitials"></div>
+                    <h4 class="font-bold text-slate-800 text-lg" id="profileName">Name</h4>
+                    <p class="text-xs text-slate-500" id="profileMobile">Mobile</p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-2">
+                    <div class="flex justify-between"><span class="text-[11px] font-bold text-slate-500">Address</span><span class="text-xs font-semibold text-slate-800" id="profileAddress"></span></div>
+                    <div class="flex justify-between"><span class="text-[11px] font-bold text-slate-500">Daily Milk</span><span class="text-xs font-semibold text-slate-800" id="profileMilk"></span></div>
+                    <div class="flex justify-between"><span class="text-[11px] font-bold text-slate-500">Milk Rate</span><span class="text-xs font-semibold text-slate-800" id="profileRate"></span></div>
+                </div>
+                
+                <div class="relative">
+                    <label class="block text-[11px] font-bold text-slate-500 mb-1">Your PIN / Password</label>
+                    <input type="password" id="profilePasswordInput" class="w-full rounded-xl border-slate-200 bg-slate-50 border py-3 px-4 outline-none font-medium text-sm text-slate-600" readonly>
+                    <button onclick="togglePasswordView()" class="absolute right-3 top-[26px] text-slate-400 hover:text-indigo-500 p-2"><i class="fa-solid fa-eye" id="eyeIcon"></i></button>
+                </div>
+
+                <!-- WebAuthn Fingerprint Setup Button -->
+                <button onclick="setupFingerprint()" class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold py-3 mt-4 rounded-xl shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2 border border-indigo-200">
+                    <i class="fa-solid fa-fingerprint text-lg"></i> Setup Fingerprint Login
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW ORDER MODAL -->
+    <div id="newOrderModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-[100] flex items-center justify-center opacity-0 transition-all duration-300 px-4">
+        <div class="surface w-full max-w-sm p-6 scale-95 transition-all duration-300 relative">
+            <button onclick="closeNewOrderModal()" class="absolute top-4 right-4 text-slate-400 hover:bg-slate-100 h-8 w-8 rounded-full flex items-center justify-center transition-all"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-lg font-bold text-slate-800 mb-5 font-poppins"><i class="fa-solid fa-cart-plus text-indigo-500 mr-2"></i> New Order</h3>
+            <div class="space-y-4">
+                <div><label class="block text-[11px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Mobile No.</label><input type="tel" id="orderFormMobile" class="w-full rounded-2xl border-slate-200 bg-slate-50 border p-3.5 text-sm outline-none focus:border-indigo-500" placeholder="10 digit number"></div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Select Item</label>
+                    <select id="orderFormItem" onchange="updateOrderUnit()" class="w-full rounded-2xl border-slate-200 bg-slate-50 border p-3.5 text-sm outline-none font-bold text-slate-700 focus:border-indigo-500"></select>
+                </div>
+                <div><label class="block text-[11px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Rate (Fixed)</label><input type="text" id="orderFormRateDisplay" class="w-full rounded-2xl border-slate-200 bg-slate-100 text-slate-500 border p-3.5 text-sm outline-none font-bold cursor-not-allowed" readonly disabled></div>
+                <div><label class="block text-[11px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Quantity <span id="orderFormUnitLabel" class="text-indigo-500 font-black"></span></label><input type="number" step="0.1" id="orderFormQty" class="w-full rounded-2xl border-slate-200 bg-slate-50 border p-3.5 text-sm outline-none font-bold focus:border-indigo-500" placeholder="Enter amount"></div>
+                <button onclick="submitNewOrder()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-2xl shadow-lg active:scale-95 mt-4 transition-all">Place Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Modal -->
+    <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-[100] flex items-center justify-center opacity-0 transition-all duration-300 px-4">
+        <div class="surface p-8 text-center max-w-xs w-full shadow-2xl relative scale-95 transition-transform duration-300 mx-auto">
+            <button onclick="closeQRModal()" class="absolute top-4 right-4 bg-slate-50 text-slate-400 hover:bg-slate-100 h-8 w-8 rounded-full flex items-center justify-center transition-all"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-lg font-bold text-slate-800 mb-1 font-poppins">Pay via UPI</h3>
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 inline-block mb-5 mt-3"><img id="qrImage" src="" alt="QR Code" class="w-48 h-48 rounded-xl"></div>
+            <p class="text-3xl font-black text-indigo-600 mb-1 tracking-tight" id="qrAmount">&#8377;0</p>
+            <p class="text-[11px] text-slate-400 mt-1 font-mono font-bold uppercase tracking-wider">UPI: 9508231565-5@ybl</p>
+        </div>
+    </div>
+
+    <!-- CUSTOM DIALOG -->
+    <div id="customDialog" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-[110] flex items-center justify-center transition-all duration-300 opacity-0 px-4">
+        <div id="customDialogBox" class="surface shadow-2xl w-full max-w-xs p-6 scale-95 transition-all duration-300 text-center flex flex-col mx-auto">
+            <div id="dialogIcon" class="mb-4 flex justify-center">
+                <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center text-2xl shadow-inner"><i class="fa-solid fa-circle-info"></i></div>
+            </div>
+            <h3 id="dialogTitle" class="text-lg font-bold text-slate-800 mb-2 font-poppins">Title</h3>
+            <p id="dialogMessage" class="text-slate-500 text-sm mb-6 leading-relaxed">Message</p>
+            <div class="flex justify-center gap-3 w-full mt-auto">
+                <button id="dialogCancelBtn" class="py-3 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 w-1/2 transition-all hidden">Cancel</button>
+                <button id="dialogConfirmBtn" class="py-3 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 w-full transition-all shadow-md active:scale-95">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        const firebaseConfig = { apiKey: "AIzaSyD4Aaz-HXmH7hUPDj-owcOEvub5VSHsoRQ", authDomain: "c-milk-9f2b5.firebaseapp.com", databaseURL: "https://c-milk-9f2b5-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "c-milk-9f2b5" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function getLocalToday() { const dateObj = new Date(); const offset = dateObj.getTimezoneOffset() * 60000; return (new Date(dateObj - offset)).toISOString().split('T')[0]; }
+        const today = getLocalToday();
+
+        let customersData = {};
+        let itemRates = {};
+        let loggedInCustomerId = null;
+
+        const CustomDialog = {
+            alert: function(title, msg) {
+                return new Promise((resolve) => {
+                    const m = document.getElementById('customDialog'), b = document.getElementById('customDialogBox');
+                    document.getElementById('dialogCancelBtn').classList.add('hidden');
+                    document.getElementById('dialogConfirmBtn').className = "py-3 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 w-full transition-all shadow-md active:scale-95";
+                    document.getElementById('dialogConfirmBtn').innerText = "OK";
+                    document.getElementById('dialogIcon').innerHTML = '<div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center text-2xl shadow-inner"><i class="fa-solid fa-circle-info"></i></div>';
+                    
+                    document.getElementById('dialogTitle').innerText = title; document.getElementById('dialogMessage').innerText = msg;
+                    m.classList.remove('hidden'); setTimeout(()=>{ m.classList.remove('opacity-0'); b.classList.remove('scale-95'); }, 10);
+                    
+                    document.getElementById('dialogConfirmBtn').onclick = () => { m.classList.add('opacity-0'); b.classList.add('scale-95'); setTimeout(()=>{ m.classList.add('hidden'); }, 300); resolve(true); };
+                });
+            },
+            confirm: function(title, msg) {
+                return new Promise((resolve) => {
+                    const m = document.getElementById('customDialog'), b = document.getElementById('customDialogBox');
+                    document.getElementById('dialogCancelBtn').classList.remove('hidden');
+                    document.getElementById('dialogConfirmBtn').className = "py-3 rounded-xl font-bold text-white bg-rose-500 hover:bg-rose-600 w-1/2 transition-all shadow-md active:scale-95";
+                    document.getElementById('dialogConfirmBtn').innerText = "Confirm";
+                    document.getElementById('dialogIcon').innerHTML = '<div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center text-2xl shadow-inner"><i class="fa-solid fa-circle-question"></i></div>';
+                    
+                    document.getElementById('dialogTitle').innerText = title; document.getElementById('dialogMessage').innerText = msg;
+                    m.classList.remove('hidden'); setTimeout(()=>{ m.classList.remove('opacity-0'); b.classList.remove('scale-95'); }, 10);
+                    
+                    const close = (v) => { m.classList.add('opacity-0'); b.classList.add('scale-95'); setTimeout(()=>{ m.classList.add('hidden'); }, 300); resolve(v); };
+                    document.getElementById('dialogCancelBtn').onclick = () => close(false);
+                    document.getElementById('dialogConfirmBtn').onclick = () => close(true);
+                });
+            }
+        };
+
+        function formatDailyDate(dStr) { let p = dStr.split('-'); if (p.length !== 3) return dStr; const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; return `${p[2]} ${months[parseInt(p[1])-1]} ${p[0]}`; }
+
+        function showScreen(screenId) {
+            ['loginScreen', 'customerScreen', 'monthDetailScreen'].forEach(id => { 
+                let el = document.getElementById(id); 
+                if(el) { el.classList.remove('screen-active'); el.style.display = 'none'; } 
+            });
+            const target = document.getElementById(screenId); 
+            if(target) { target.classList.add('screen-active'); target.style.display = (screenId === 'loginScreen') ? 'flex' : 'block'; }
+        }
+
+        db.ref('settings/itemRates').on('value', snap => {
+            if(snap.exists()) { itemRates = snap.val(); } else { itemRates = { 'Premium Milk': { rate: 60, unit: 'L' } }; }
+            updateOrderDropdownOptions();
+        });
+
+        function updateOrderDropdownOptions() {
+            const select = document.getElementById('orderFormItem');
+            if(!select) return;
+            select.innerHTML = '';
+            for(let item in itemRates) { select.innerHTML += `<option value="${item}">${item}</option>`; }
+            updateOrderUnit();
+        }
+        
+        async function loginCustomer() { 
+            const mob = document.getElementById('loginMobile').value; 
+            const pass = document.getElementById('loginPassword').value; 
+            if(!mob || !pass) return CustomDialog.alert("Error", "Mobile aur Password daalein."); 
+            
+            let foundId = Object.keys(customersData).find(key => 
+                customersData[key].mobile && customersData[key].password &&
+                String(customersData[key].mobile).trim() === mob.trim() && 
+                String(customersData[key].password).trim() === pass.trim()
+            ); 
+            
+            if(foundId) { 
+                loggedInCustomerId = foundId; 
+                showScreen('customerScreen'); 
+                renderCustomerDashboard(); 
+            } else {
+                CustomDialog.alert("Incorrect", "Mobile number ya password galat hai."); 
+            }
+        }
+        
+        async function logoutConfirm() {
+            if(await CustomDialog.confirm("Logout", "Kya aap sach mein logout karna chahte hain?")) {
+                loggedInCustomerId = null; document.getElementById('loginMobile').value = ''; document.getElementById('loginPassword').value = ''; showScreen('loginScreen');
+            }
+        }
+
+        db.ref('customers').on('value', (snapshot) => { 
+            customersData = snapshot.val() || {}; 
+            
+            // WebAuthn logic: Fingerprint login button hide/unhide karein
+            const anyFingerprintExists = Object.values(customersData).some(c => c.fingerprintId);
+            if (anyFingerprintExists) {
+                document.getElementById('fingerprintLoginBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('fingerprintLoginBtn').classList.add('hidden');
+            }
+
+            if (loggedInCustomerId) { renderCustomerDashboard(); } 
+        });
+
+        // =========================================================================
+        // WEBAUTHN (FINGERPRINT / BIOMETRIC) SYSTEM
+        // =========================================================================
+
+        function bufferToBase64(buffer) {
+            return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+        }
+        
+        function base64ToBuffer(base64) {
+            return Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+        }
+
+        async function setupFingerprint() {
+            if (!loggedInCustomerId || !window.PublicKeyCredential) {
+                return CustomDialog.alert("Error", "Biometric login aapke device me support nahi karta.");
+            }
+
+            try {
+                const c = customersData[loggedInCustomerId];
+                const challenge = crypto.getRandomValues(new Uint8Array(32));
+                const userId = new TextEncoder().encode(loggedInCustomerId);
+
+                const credential = await navigator.credentials.create({
+                    publicKey: {
+                        challenge: challenge,
+                        rp: { name: "Radha Dairy", id: window.location.hostname },
+                        user: {
+                            id: userId,
+                            name: c.mobile || "customer",
+                            displayName: c.name || "Customer"
+                        },
+                        pubKeyCredParams: [{ type: "public-key", alg: -7 }], // ES256
+                        authenticatorSelection: { 
+                            authenticatorAttachment: "platform", 
+                            userVerification: "required",
+                            discoverableCredential: "preferred" 
+                        },
+                        timeout: 60000
+                    }
+                });
+
+                const rawId = bufferToBase64(credential.rawId);
+                await db.ref(`customers/${loggedInCustomerId}/fingerprintId`).set(rawId);
+                
+                closeProfileModal();
+                CustomDialog.alert("Success", "Aapka Fingerprint setup ho gaya hai! Ab aap isse login kar sakte hain.");
+                
+            } catch (e) {
+                console.error("Setup Error:", e);
+                CustomDialog.alert("Failed", "Fingerprint setup cancel ho gaya ya fail ho gaya.");
+            }
+        }
+
+        async function loginCustomerWithFingerprint() {
+            if (!window.PublicKeyCredential) {
+                return CustomDialog.alert("Error", "Aapka device Fingerprint support nahi karta.");
+            }
+
+            try {
+                const challenge = crypto.getRandomValues(new Uint8Array(32));
+
+                const credential = await navigator.credentials.get({
+                    publicKey: {
+                        challenge: challenge,
+                        rpId: window.location.hostname,
+                        userVerification: "required"
+                    }
+                });
+
+                const rawId = bufferToBase64(credential.rawId);
+
+                let foundId = Object.keys(customersData).find(key => 
+                    customersData[key].fingerprintId === rawId
+                );
+
+                if (foundId) {
+                    loggedInCustomerId = foundId;
+                    showScreen('customerScreen');
+                    renderCustomerDashboard();
+                } else {
+                    CustomDialog.alert("Error", "Ye fingerprint kisi account se link nahi hai. Pehle login karke setup karein.");
+                }
+
+            } catch (e) {
+                console.error("Login Error:", e);
+                CustomDialog.alert("Failed", "Fingerprint match nahi hua ya cancel kar diya gaya.");
+            }
+        }
+        
+        // =========================================================================
+
+        function getDetailedBalance(customer) {
+            let prevMilkCost = 0, prevPaid = 0, currMilkCost = 0, currPaid = 0, currMilkLiters = 0;
+            if(customer.archives) { Object.values(customer.archives).forEach(e => { if (e.isPayment || e.total < 0) prevPaid += Math.abs(parseFloat(e.total)||0); else prevMilkCost += parseFloat(e.total)||0; }); }
+            if(customer.entries) { Object.values(customer.entries).forEach(e => { if (e.isPayment || e.total < 0) currPaid += Math.abs(parseFloat(e.total)||0); else { currMilkCost += parseFloat(e.total)||0; currMilkLiters += parseFloat(e.quantity)||0; } }); }
+            return { currMilkLiters, netBalance: (prevMilkCost + currMilkCost) - (prevPaid + currPaid) };
+        }
+
+        function renderCustomerDashboard() {
+            if(!loggedInCustomerId) return;
+            const c = customersData[loggedInCustomerId];
+            if(!c) return;
+
+            document.getElementById('custDashName').innerText = (c.name || 'Customer') + '  ';
+            document.getElementById('custDashDailyMilk').innerText = (c.dailyMilk || '0') + ' L';
+            document.getElementById('custStatus').innerText = (c.status || 'Active').toUpperCase();
+            document.getElementById('custStatus').className = c.status === 'paused' ? 'font-bold bg-rose-500/20 text-rose-100 px-3 py-1 rounded-lg text-sm border border-rose-500/30' : 'font-bold bg-white/20 px-3 py-1 rounded-lg text-sm border border-white/20';
+
+            let bal = getDetailedBalance(c);
+            let dashBill = document.getElementById('custDashBill');
+            let dashBillLabel = document.getElementById('custDashBillLabel');
+            
+            if (bal.netBalance > 0) { dashBill.innerText = `\u20B9${bal.netBalance.toFixed(2)}`; dashBillLabel.innerText = "Outstanding Balance"; } 
+            else if (bal.netBalance < 0) { dashBill.innerText = `+ \u20B9${Math.abs(bal.netBalance).toFixed(2)}`; dashBillLabel.innerText = "Advance Balance"; } 
+            else { dashBill.innerText = `\u20B90.00`; dashBillLabel.innerText = "Clear Balance"; }
+
+            let displayData = [];
+            let totalBillCalc = 0; let totalJamaCalc = 0;
+            if(c.archives) displayData = displayData.concat(Object.entries(c.archives));
+            if(c.entries) displayData = displayData.concat(Object.entries(c.entries));
+            if(displayData.length > 0) {
+                displayData.sort((a,b) => b[0].localeCompare(a[0])); 
+                displayData.forEach(([d, e]) => { if (e.isPayment || e.total < 0) totalJamaCalc += Math.abs(parseFloat(e.total)||0); else totalBillCalc += parseFloat(e.total)||0; });
+            }
+            document.getElementById('custTotalBill').innerText = `\u20B9${totalBillCalc.toFixed(2)}`;
+
+            const recentList = document.getElementById('custRecentActivityList');
+            recentList.innerHTML = '';
+            let recent5 = displayData.slice(0, 5);
+            
+            if(recent5.length === 0) { recentList.innerHTML = '<p class="text-slate-400 text-sm py-4 text-center">No recent activity yet.</p>'; } 
+            else {
+                recent5.forEach(([d, e]) => {
+                    let dateToDisplay = e.isPayment ? formatDailyDate(e.displayDate) : formatDailyDate(d);
+                    if (e.isPayment || e.total < 0) {
+                        recentList.innerHTML += `<div class="flex justify-between items-center py-3.5 border-b border-gray-100 last:border-0"><div><p class="font-bold text-gray-800">Payment (Jama)</p><p class="text-[11px] font-medium text-gray-500 mt-0.5">${dateToDisplay}</p></div><p class="font-black text-emerald-500">+ \u20B9${Math.abs(parseFloat(e.total)).toFixed(2)}</p></div>`;
+                    } else {
+                        recentList.innerHTML += `<div class="flex justify-between items-center py-3.5 border-b border-gray-100 last:border-0"><div><p class="font-bold text-gray-800">Milk Purchase</p><p class="text-[11px] font-medium text-gray-500 mt-0.5">${dateToDisplay} - ${Number(e.quantity)} L</p></div><p class="font-black text-rose-500">\u2212 \u20B9${parseFloat(e.total).toFixed(2)}</p></div>`;
+                    }
+                });
+            }
+        }
+
+        function openProfileModal() { 
+            const c = customersData[loggedInCustomerId]; 
+            if(!c) return;
+            document.getElementById('profileInitials').innerText = c.name ? c.name.substring(0,2).toUpperCase() : 'CU';
+            document.getElementById('profileName').innerText = c.name;
+            document.getElementById('profileMobile').innerText = '+91 ' + (c.mobile || '');
+            document.getElementById('profileAddress').innerText = c.address || 'N/A';
+            document.getElementById('profileMilk').innerText = (c.dailyMilk || '0') + ' L / Day';
+            document.getElementById('profileRate').innerText = '\u20B9' + (c.rate || '0') + ' / L';
+            document.getElementById('profilePasswordInput').value = c.password || '';
+            document.getElementById('profilePasswordInput').type = 'password';
+            document.getElementById('eyeIcon').className = 'fa-solid fa-eye';
+
+            const m = document.getElementById('profileModal'); m.classList.remove('hidden'); setTimeout(() => { m.classList.remove('opacity-0'); m.children[0].classList.remove('scale-95'); }, 10); 
+        }
+        function closeProfileModal() { const m = document.getElementById('profileModal'); m.classList.add('opacity-0'); m.children[0].classList.add('scale-95'); setTimeout(() => { m.classList.add('hidden'); }, 300); }
+        
+        function togglePasswordView() {
+            const input = document.getElementById('profilePasswordInput');
+            const icon = document.getElementById('eyeIcon');
+            if(input.type === 'password') { input.type = 'text'; icon.className = 'fa-solid fa-eye-slash'; } 
+            else { input.type = 'password'; icon.className = 'fa-solid fa-eye'; }
+        }
+
+        function updateOrderUnit() { 
+            const i = document.getElementById('orderFormItem').value; 
+            const details = itemRates[i]; 
+            if(details) { 
+                document.getElementById('orderFormUnitLabel').innerText = `(${details.unit})`; 
+                document.getElementById('orderFormRateDisplay').value = `\u20B9${details.rate} / ${details.unit}`; 
+            } 
+        }
+        
+        function openNewOrderModal() { 
+            if(loggedInCustomerId && customersData[loggedInCustomerId]) 
+                document.getElementById('orderFormMobile').value = customersData[loggedInCustomerId].mobile || ''; 
+            updateOrderUnit(); 
+            const m = document.getElementById('newOrderModal'); 
+            m.classList.remove('hidden'); 
+            setTimeout(() => { m.classList.remove('opacity-0'); m.children[0].classList.remove('scale-95'); }, 10); 
+        }
+        
+        function closeNewOrderModal() { 
+            const m = document.getElementById('newOrderModal'); 
+            m.classList.add('opacity-0'); m.children[0].classList.add('scale-95'); 
+            setTimeout(() => { m.classList.add('hidden'); }, 300); 
+        }
+        
+        async function submitNewOrder() {
+            if (!loggedInCustomerId) return;
+            const mobile = document.getElementById('orderFormMobile').value, item = document.getElementById('orderFormItem').value, qty = parseFloat(document.getElementById('orderFormQty').value);
+            if (!mobile || isNaN(qty) || qty <= 0) return CustomDialog.alert("Error", "Sahi detail daalein.");
+            const details = itemRates[item], totalAmount = qty * details.rate, orderId = 'ORD_' + new Date().getTime();
+            await db.ref(`/customers/${loggedInCustomerId}/orders/${orderId}`).set({ item: item, quantity: qty, unit: details.unit, rate: details.rate, totalAmount: totalAmount, mobile: mobile, status: 'Pending', orderDate: getLocalToday(), timestamp: firebase.database.ServerValue.TIMESTAMP });
+            closeNewOrderModal(); document.getElementById('orderFormQty').value = '';
+            CustomDialog.alert("Order Placed!", `Aapka order pending hai. (Total: \u20B9${totalAmount}).`);
+        }
+
+        function showCustomerQR(amount = null) { 
+            const c = customersData[loggedInCustomerId]; 
+            let finalAmt = amount !== null ? amount : getDetailedBalance(c).netBalance;
+            if(finalAmt <= 0) return CustomDialog.alert("No Dues", "Aapko koi payment nahi karni hai."); 
+            const upiId = "9508231565-5@ybl"; 
+            document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${upiId}&pn=Radha Dairy&am=${finalAmt.toFixed(2)}&cu=INR`)}`; 
+            document.getElementById('qrAmount').innerText = `\u20B9${finalAmt.toFixed(2)}`; 
+            const m = document.getElementById('qrModal'); m.classList.remove('hidden'); setTimeout(() => { m.classList.remove('opacity-0'); m.children[0].classList.remove('scale-95'); }, 10); 
+        }
+        
+        function closeQRModal() { 
+            const m = document.getElementById('qrModal'); 
+            m.classList.add('opacity-0'); m.children[0].classList.add('scale-95'); 
+            setTimeout(() => { m.classList.add('hidden'); }, 300); 
+        }
+
+        function toggleLoginPasswordVisibility() {
+            const input = document.getElementById('loginPassword');
+            const icon = document.getElementById('loginEyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash'; 
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye'; 
+            }
+        }
+
+        function switchHistoryTab(tab) {
+            const tabReg = document.getElementById('tabRegularOrders');
+            const tabNew = document.getElementById('tabNewOrders');
+            const contentReg = document.getElementById('contentRegularOrders');
+            const contentNew = document.getElementById('contentNewOrders');
+            
+            if(tab === 'regular') {
+                tabReg.className = "flex-1 py-3.5 text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 transition-all";
+                tabNew.className = "flex-1 py-3.5 text-sm font-bold text-slate-400 border-b-2 border-transparent transition-all hover:text-slate-600";
+                contentReg.classList.remove('hidden');
+                contentReg.classList.add('flex');
+                contentNew.classList.add('hidden');
+            } else {
+                tabNew.className = "flex-1 py-3.5 text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 transition-all";
+                tabReg.className = "flex-1 py-3.5 text-sm font-bold text-slate-400 border-b-2 border-transparent transition-all hover:text-slate-600";
+                contentNew.classList.remove('hidden');
+                contentReg.classList.add('hidden');
+                contentReg.classList.remove('flex');
+            }
+        }
+
+        function openCurrentMonthStatement() {
+            let d = new Date();
+            let prefix = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            let monthName = d.toLocaleString('default', { month: 'long', year: 'numeric' });
+            openMonthDetailScreen(prefix, monthName);
+        }
+
+        function openUnifiedHistoryModal(defaultTab = 'regular') {
+            const c = customersData[loggedInCustomerId]; 
+            if(!c) return;
+
+            const regListDiv = document.getElementById('regularOrdersList');
+            regListDiv.innerHTML = '';
+            
+            let displayData = [];
+            if(c.archives) displayData = displayData.concat(Object.entries(c.archives));
+            if(c.entries) displayData = displayData.concat(Object.entries(c.entries));
+            
+            let d = new Date();
+            let monthsData = {}; 
+            
+            for(let i = 0; i < 6; i++) {
+                let m = new Date(d.getFullYear(), d.getMonth() - i, 1);
+                let prefix = `${m.getFullYear()}-${String(m.getMonth() + 1).padStart(2, '0')}`;
+                let monthName = m.toLocaleString('default', { month: 'long', year: 'numeric' });
+                monthsData[prefix] = { name: monthName, prefix: prefix, items: [], totalMilk: 0, totalAmount: 0, isCurrent: (i === 0) };
+            }
+
+            displayData.forEach(([dateKey, e]) => {
+                let actualDate = (e.isPayment ? e.displayDate : dateKey) || "";
+                let prefix = actualDate.substring(0, 7); 
+                if(monthsData[prefix]) {
+                    monthsData[prefix].items.push({dateKey, ...e});
+                    if(!e.isPayment && parseFloat(e.total) > 0) {
+                        monthsData[prefix].totalMilk += parseFloat(e.quantity) || 0;
+                        monthsData[prefix].totalAmount += parseFloat(e.total) || 0;
+                    }
+                }
+            });
+
+            let hasAnyData = false;
+            Object.values(monthsData).sort((a,b) => b.prefix.localeCompare(a.prefix)).forEach(mData => {
+                if(mData.items.length > 0 || mData.isCurrent) {
+                    hasAnyData = true;
+                    let monthHtml = `
+                    <div class="mb-4 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden transition-all duration-300">
+                        <div class="flex justify-between items-center p-5 cursor-pointer hover:bg-slate-50 transition-colors" onclick="openMonthDetailScreen('${mData.prefix}', '${mData.name}')">
+                            <div>
+                                <h4 class="font-bold text-indigo-900 flex items-center gap-2 text-lg">
+                                    <i class="fa-regular fa-calendar-days text-indigo-500"></i> ${mData.name}
+                                    ${mData.isCurrent ? '<span class="bg-indigo-100 text-indigo-700 text-[10px] px-2 py-0.5 rounded uppercase tracking-wider font-bold ml-2">Current</span>' : ''}
+                                </h4>
+                                <p class="text-[13px] font-bold text-slate-500 mt-2">Milk: <span class="text-slate-800 mr-3">${Number(mData.totalMilk.toFixed(2))}L</span> Bill: <span class="text-rose-600">\u20B9${mData.totalAmount.toFixed(2)}</span></p>
+                            </div>
+                            <div class="text-slate-300">
+                                <i class="fa-solid fa-chevron-right text-lg"></i>
+                            </div>
+                        </div>
+                    </div>`;
+                    regListDiv.innerHTML += monthHtml;
+                }
+            });
+
+            if(!hasAnyData) { regListDiv.innerHTML = '<p class="text-sm text-slate-400 text-center py-8">No regular data available.</p>'; }
+
+            const newOrdersList = document.getElementById('contentNewOrders');
+            newOrdersList.innerHTML = '';
+            if(c.orders) {
+                let allOrders = Object.entries(c.orders).map(([id, data]) => ({id, ...data})).sort((a,b) => b.timestamp - a.timestamp);
+                if(allOrders.length === 0) newOrdersList.innerHTML = '<p class="text-sm text-slate-400 text-center py-8">No extra orders found.</p>';
+                allOrders.forEach(o => {
+                    let statusColor = o.status === 'Completed' ? 'text-emerald-500 bg-emerald-50' : (o.status === 'Cancelled' ? 'text-rose-500 bg-rose-50' : (o.status === 'Approved' ? 'text-indigo-600 bg-indigo-50' : 'text-amber-500 bg-amber-50'));
+                    let actionBtn = o.status === 'Approved' ? `<button onclick="showCustomerQR(${o.totalAmount})" class="mt-3 w-full text-[12px] bg-indigo-600 text-white font-bold py-2 rounded-xl active:scale-95 transition-all shadow-sm">Pay \u20B9${o.totalAmount}</button>` : '';
+                    
+                    newOrdersList.innerHTML += `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">${o.item} <span class="text-[11px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded ml-1">${o.quantity} ${o.unit}</span></p>
+                                <p class="text-[10px] text-slate-400 font-medium mt-1.5"><i class="fa-regular fa-calendar mr-1"></i> ${formatDailyDate(o.orderDate)}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-black text-slate-800 text-sm mb-1.5">\u20B9${o.totalAmount}</p>
+                                <span class="text-[9px] font-bold ${statusColor} px-2 py-1 rounded uppercase tracking-wider">${o.status}</span>
+                            </div>
+                        </div>
+                        ${actionBtn}
+                    </div>`;
+                });
+            } else { newOrdersList.innerHTML = '<p class="text-sm text-slate-400 text-center py-8">No extra items history.</p>'; }
+
+            switchHistoryTab(defaultTab);
+            const m = document.getElementById('unifiedHistoryModal'); 
+            m.classList.remove('hidden'); 
+            setTimeout(() => { m.classList.remove('opacity-0'); m.children[0].classList.remove('scale-95'); }, 10); 
+        }
+        
+        function closeUnifiedHistoryModal() { 
+            const m = document.getElementById('unifiedHistoryModal'); 
+            m.classList.add('opacity-0'); m.children[0].classList.add('scale-95'); 
+            setTimeout(() => { m.classList.add('hidden'); }, 300); 
+        }
+
+        function openMonthDetailScreen(monthPrefix, monthName) {
+            const c = customersData[loggedInCustomerId];
+            if(!c) return;
+
+            const m = document.getElementById('unifiedHistoryModal');
+            m.classList.add('hidden'); m.classList.add('opacity-0');
+
+            showScreen('monthDetailScreen');
+            document.getElementById('mdsMonthTitle').innerText = monthName;
+
+            let displayData = [];
+            if(c.archives) displayData = displayData.concat(Object.entries(c.archives));
+            if(c.entries) displayData = displayData.concat(Object.entries(c.entries));
+            
+            let monthData = displayData.filter(([d, e]) => {
+                let actualDate = (e.isPayment ? e.displayDate : d) || "";
+                return actualDate.startsWith(monthPrefix);
+            });
+
+            let totalMilk = 0, totalBill = 0, totalJama = 0;
+            const recordsList = document.getElementById('mdsRecordsList');
+            recordsList.innerHTML = '';
+
+            if(monthData.length === 0) {
+                recordsList.innerHTML = `<div class="p-5 text-center text-slate-400 text-sm">No records for this month.</div>`;
+            } else {
+                monthData.sort((a,b) => b[0].localeCompare(a[0])); 
+                monthData.forEach(([d, e]) => {
+                    let dateToDisplay = e.isPayment ? formatDailyDate(e.displayDate) : formatDailyDate(d);
+                    let isZeroMilk = !e.isPayment && Number(e.quantity) === 0;
+
+                    if (e.isPayment || e.total < 0) {
+                        totalJama += Math.abs(parseFloat(e.total)||0);
+                        recordsList.innerHTML += `
+                        <div class="flex justify-between items-center p-4 border-b border-slate-50 bg-emerald-50/30">
+                            <div><p class="font-bold text-emerald-700 text-[13px]">Payment (Jama)</p><p class="text-[11px] font-medium text-emerald-500 mt-1">${dateToDisplay}</p></div>
+                            <p class="font-black text-emerald-600 text-[15px]">+ \u20B9${Math.abs(parseFloat(e.total)).toFixed(2)}</p>
+                        </div>`;
+                    } else {
+                        totalMilk += parseFloat(e.quantity)||0; 
+                        totalBill += parseFloat(e.total)||0;
+                        let itemClass = isZeroMilk ? 'bg-rose-50/50 text-rose-600' : 'bg-white text-slate-700';
+                        let amtClass = isZeroMilk ? 'text-rose-600' : 'text-slate-800';
+                        let desc = isZeroMilk ? '0 L (No Milk)' : `${Number(e.quantity)} L`;
+
+                        recordsList.innerHTML += `
+                        <div class="flex justify-between items-center p-4 border-b border-slate-50 ${itemClass}">
+                            <div><p class="font-bold text-[13px]">${desc}</p><p class="text-[11px] font-medium opacity-70 mt-1">${dateToDisplay}</p></div>
+                            <p class="font-bold text-[15px] ${amtClass}">\u20B9${parseFloat(e.total).toFixed(2)}</p>
+                        </div>`;
+                    }
+                });
+            }
+
+            document.getElementById('mdsTotalMilk').innerText = `${Number(totalMilk.toFixed(2))} L`;
+            document.getElementById('mdsTotalBill').innerText = `\u20B9${totalBill.toFixed(2)}`;
+            document.getElementById('mdsTotalPaid').innerText = `\u20B9${totalJama.toFixed(2)}`;
+            
+            let monthDue = totalBill - totalJama;
+            document.getElementById('mdsTotalDue').innerText = monthDue > 0 ? `\u20B9${monthDue.toFixed(2)}` : (monthDue < 0 ? `+ \u20B9${Math.abs(monthDue).toFixed(2)}` : '\u20B90');
+
+            document.getElementById('mdsDownloadBtn').onclick = () => {
+                downloadCustomerMonthPDF(monthPrefix, monthName, monthData, totalMilk, totalBill, totalJama, monthDue);
+            };
+        }
+
+        function closeMonthDetailScreen() {
+            showScreen('customerScreen');
+        }
+
+        // =========================================================================
+        // CUSTOMER APP PDF GENERATOR (FIXED VISIBILITY & ENCODING)
+        // =========================================================================
+        function downloadCustomerMonthPDF(monthPrefix, monthName, monthData, totalMilk, totalBill, totalJama, finalAmount) {
+            const c = customersData[loggedInCustomerId];
+            const loadingOverlay = document.getElementById('pdfLoadingOverlay');
+            loadingOverlay.classList.remove('hidden'); 
+            loadingOverlay.classList.add('flex');
+
+            const upiId = "9508231565-5@ybl"; 
+            const upiUrl = `upi://pay?pa=${upiId}&pn=Radha%20Dairy&am=${finalAmount > 0 ? finalAmount.toFixed(2) : 0}&cu=INR`;
+            const qrCodeApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiUrl)}`;
+
+            const pdfContainer = document.createElement('div');
+            
+            // Fixed container for perfect layout rendering
+            pdfContainer.style.position = 'absolute';
+            pdfContainer.style.left = '-9999px';
+            pdfContainer.style.top = '0';
+            pdfContainer.style.width = '800px'; 
+            pdfContainer.style.padding = '20px'; 
+            pdfContainer.style.fontFamily = "'Inter', sans-serif, Arial";
+            pdfContainer.style.color = '#1e293b';
+            pdfContainer.style.backgroundColor = '#ffffff';
+            pdfContainer.style.zIndex = '-9999'; 
+            pdfContainer.style.pointerEvents = 'none';
+
+            // 1. EXACT ADMIN HEADER MATCH
+            const headerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <img src="https://i.ibb.co/Ps0dQnHk/1783568195843.png" crossorigin="anonymous" style="width: 75px; height: 75px; border-radius: 12px; border: 2px solid #2563eb; object-fit: cover;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 26px; font-weight: 900; color: #2563eb; letter-spacing: 1px;">RADHA DAIRY</h1>
+                        <p style="margin: 5px 0 0; font-size: 13px; font-weight: 600; color: #475569;">Satgama, Jamui, Bihar</p>
+                        <p style="margin: 2px 0 0; font-size: 12px; color: #64748b;">  +91 9508231565 |    radhadairyy@gmail.com</p>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <h2 style="margin: 0; font-size: 20px; color: #0f172a; text-transform: uppercase; font-weight: 800;">${monthName} Statement</h2>
+                    <p style="margin: 5px 0 0; font-size: 12px; font-weight: bold; color: #64748b;">Date: ${new Date().toLocaleDateString('en-IN')}</p>
+                </div>
+            </div>`;
+
+            // 2. EXACT ADMIN 'BILLED TO' MATCH
+            const customerHTML = `
+            <div style="background-color: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+                <h3 style="margin: 0 0 10px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Billed To:</h3>
+                <div style="display: flex; justify-content: space-between;">
+                    <div>
+                        <p style="margin: 0 0 4px; font-size: 16px; font-weight: 800; color: #0f172a;">${c.name}</p>
+                        <p style="margin: 0; font-size: 13px; color: #475569; font-weight: 500;">  ${c.mobile || 'Not Provided'}</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="margin: 0 0 4px; font-size: 13px; color: #475569; font-weight: 500;">  ${c.address || 'Not Provided'}</p>
+                        <p style="margin: 0; font-size: 13px; color: #2563eb; font-weight: bold;">Rate: \u20B9${c.rate || 0} / L</p>
+                    </div>
+                </div>
+            </div>`;
+
+            // 3. TABLE DATA MATCH
+            let tbodyHTML = '';
+            if(monthData.length === 0) {
+                tbodyHTML = `<tr><td colspan="3" style="text-align: center; padding: 20px; color: #94a3b8; font-weight: 500;">No records found.</td></tr>`;
+            } else {
+                let printData = [...monthData].sort((a,b) => a[0].localeCompare(b[0]));
+                printData.forEach(([d, e]) => {
+                    let dateToDisplay = e.isPayment ? formatDailyDate(e.displayDate) : formatDailyDate(d);
+                    let isZeroMilk = !e.isPayment && Number(e.quantity) === 0;
+                    
+                    let bgColor = '#ffffff'; let dateColor = '#334155'; let detailColor = '#475569'; let amountColor = '#0f172a'; 
+                    let detailText = Number(e.quantity) + ' Liter'; let detailWeight = '600';
+                    
+                    if (e.isPayment || e.total < 0) { 
+                        bgColor = '#f0fdf4'; dateColor = '#15803d'; detailColor = '#16a34a'; amountColor = '#16a34a'; 
+                        detailText = 'Paisa Jama Kiya'; detailWeight = '800'; 
+                    } else if (isZeroMilk) { 
+                        bgColor = '#fef2f2'; dateColor = '#ef4444'; detailColor = '#ef4444'; amountColor = '#ef4444'; 
+                        detailText = '00 L (Band)'; detailWeight = '800'; 
+                    }
+                    
+                    tbodyHTML += `
+                    <tr style="border-bottom: 1px solid #f1f5f9; background-color: ${bgColor}; page-break-inside: avoid;">
+                        <td style="padding: 10px 15px; color: ${dateColor}; font-size: 12px; font-weight: 500;">${dateToDisplay}</td>
+                        <td style="padding: 10px 15px; color: ${detailColor}; font-size: 12px; font-weight: ${detailWeight}; text-transform: ${e.isPayment ? 'uppercase' : 'none'};">${detailText}</td>
+                        <td style="padding: 10px 15px; color: ${amountColor}; font-size: 13px; font-weight: 800; text-align: right;">\u20B9${Math.abs(parseFloat(e.total)).toFixed(2)}</td>
+                    </tr>`;
+                });
+            }
+
+            const tableHTML = `
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                <thead>
+                    <tr style="background-color: #f8fafc; border-bottom: 2px solid #e2e8f0; text-align: left;">
+                        <th style="padding: 12px 15px; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 800; width: 33%;">Date</th>
+                        <th style="padding: 12px 15px; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 800; width: 33%;">Details</th>
+                        <th style="padding: 12px 15px; font-size: 12px; color: #64748b; text-transform: uppercase; text-align: right; font-weight: 800; width: 33%;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>${tbodyHTML}</tbody>
+            </table>`;
+
+            // 4. EXACT ADMIN FOOTER MATCH
+            const totalsHTML = `
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; page-break-inside: avoid;">
+                <div style="width: 300px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: #64748b; font-weight: 600;">Total Milk:</span>
+                        <span style="font-size: 13px; font-weight: 800; color: #2563eb;">${Number(totalMilk).toFixed(1)} L</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: #64748b; font-weight: 600;">Total Bill:</span>
+                        <span style="font-size: 13px; font-weight: 800; color: #ef4444;">\u20B9${totalBill.toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px;">
+                        <span style="font-size: 13px; color: #64748b; font-weight: 600;">Total Paid:</span>
+                        <span style="font-size: 13px; font-weight: 800; color: #10b981;">\u20B9${totalJama.toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 14px; font-weight: 800; color: #0f172a;">${finalAmount > 0 ? 'Total Due:' : finalAmount < 0 ? 'Advance:' : 'Clear:'}</span>
+                        <span style="font-size: 18px; font-weight: 900; color: ${finalAmount > 0 ? '#ef4444' : finalAmount < 0 ? '#10b981' : '#0f172a'};">\u20B9${Math.abs(finalAmount).toFixed(2)}</span>
+                    </div>
+                </div>
+            </div>`;
+
+            let paymentHTML = '';
+            if (finalAmount > 0) { 
+                paymentHTML = `
+                <div style="margin-top: 20px; padding: 20px; border: 2px dashed #cbd5e1; background-color: #f8fafc; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; page-break-inside: avoid;">
+                    <div>
+                        <h3 style="margin: 0 0 5px; font-size: 16px; font-weight: 800; color: #0f172a;">Pay Online via UPI</h3>
+                        <p style="margin: 0 0 8px; font-size: 13px; color: #64748b; font-weight: 500;">Scan this QR code from PhonePe, Google Pay, or Paytm.</p>
+                        <p style="margin: 0; font-size: 16px; font-weight: 900; color: #2563eb;">Amount to Pay: \u20B9${finalAmount.toFixed(2)}</p>
+                    </div>
+                    <img src="${qrCodeApiUrl}" crossorigin="anonymous" alt="UPI QR Code" style="width: 100px; height: 100px; border: 3px solid #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                </div>`; 
+            } else { 
+                paymentHTML = `
+                <div style="margin-top: 20px; padding: 15px; text-align: center; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 12px; color: #059669; font-weight: 800; font-size: 15px; page-break-inside: avoid;">
+                    <i class="fa-solid fa-circle-check"></i> Hisaab ekdam clear hai. Thank you!
+                </div>`; 
+            }
+
+            pdfContainer.innerHTML = headerHTML + customerHTML + tableHTML + totalsHTML + paymentHTML;
+            
+            document.body.appendChild(pdfContainer);
+
+            setTimeout(() => {
+                html2pdf().set({ 
+                    margin: [15, 10, 15, 10], 
+                    filename: `Statement_${c.name}_${monthName}.pdf`, 
+                    image: { type: 'jpeg', quality: 1.0 }, 
+                    html2canvas: { scale: 2, useCORS: true, logging: false }, 
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak: { mode: 'css', avoid: 'tr' }
+                }).from(pdfContainer).save().then(() => {
+                    document.body.removeChild(pdfContainer);
+                    loadingOverlay.classList.add('hidden'); 
+                    loadingOverlay.classList.remove('flex'); 
+                }).catch((err) => {
+                    console.error("PDF Error: ", err);
+                    document.body.removeChild(pdfContainer);
+                    loadingOverlay.classList.add('hidden'); 
+                    loadingOverlay.classList.remove('flex'); 
+                    alert("PDF generate nahi ho paya, please try again.");
+                });
+            }, 1500); 
+        }
+
+    </script>
+</body>
+</html>
                     <h2 class="text-5xl font-black mt-1 tracking-tight" id="custDashBill">&#8377;0</h2>
 
                     <div class="flex justify-between mt-8 items-end">
